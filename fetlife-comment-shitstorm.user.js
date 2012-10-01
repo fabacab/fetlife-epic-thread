@@ -53,8 +53,7 @@ FL_SHITSTORM.main = function () {
     var comments_thread = [];
     for (var i = 0; i < comments.length; i++) {
         // that contains an "@-reply",
-        // (this works on both "groups" and "improvements" even though their structure is pretty different)
-        var m = comments[i].querySelector('.content').innerHTML.match(/<p>\s*@(\w+)/i);
+        var m = comments[i].querySelector('.content').innerHTML.match(/@(\w+)/i);
         if (m !== null && m[1]) {
             comments_thread.push(comments[i]);
             // find the most recent comment by the user who was @-reply'ed to
