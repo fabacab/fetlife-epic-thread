@@ -1,0 +1,124 @@
+/**
+ *
+ * This is a Greasemonkey script and must be run using Greasemonkey 0.8 or newer, or Google Chrome.
+ *
+ * @author maymay <bitetheappleback@gmail.com>
+ */
+// ==UserScript==
+// @name           FetLife Comment Shitstorm
+// @version        0.1
+// @namespace      http://maybemaimed.com/playground/fetlife-comment-shitstorm/
+// @updateURL      https://userscripts.org/scripts/source/????.user.js
+// @description    Easily view comments in-reply-to other comments on a heated FetLife discussion thread.
+// @include        https://fetlife.com/*
+// @grant          GM_addStyle
+// @require        https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js
+// ==/UserScript==
+
+FL_SHITSTORM = {};
+FL_SHITSTORM.CONFIG = {
+    'debug': false, // switch to true to debug.
+};
+
+// Utility debugging function.
+FL_SHITSTORM.log = function (msg) {
+    if (!FL_SHITSTORM.CONFIG.debug) { return; }
+    GM_log('FETLIFE COMMENT SHITSTORM: ' + msg);
+};
+
+// Initializations.
+var uw = (unsafeWindow) ? unsafeWindow : window ; // Help with Chrome compatibility?
+GM_addStyle('\
+div.comment-shitstorm {\
+    margin-left: 73px;\
+    border: 1px solid gray;\
+    padding: 1em;\
+}\
+footer.comment-shitstorm {\
+    width: 598px;\
+    float: left;\
+}\
+article.comment:target { border: 1px solid red; }\
+');
+FL_SHITSTORM.init = function () {
+    FL_SHITSTORM.main();
+};
+window.addEventListener('DOMContentLoaded', FL_SHITSTORM.init);
+
+// This is the main() function, executed on page load.
+FL_SHITSTORM.main = function () {
+    // Iterate through list of comments.
+    var comments = document.querySelectorAll('#comments .comment');
+    // For each comment
+    var comments_thread = [];
+    for (var i = 0; i < comments.length; i++) {
+        // that contains an "@-reply",
+        var m = comments[i].querySelector('.content').innerHTML.match(/@\s*(\w+)/i);
+        if (m !== null && m[1]) {
+            comments_thread.push(comments[i]);
+            // find the most recent comment by the user who was @-reply'ed to
+            // by iterating backwards from the current position
+            for (var ix = i; ix >= 0; ix--) {
+                var replying_to_nickname = comments[ix].querySelector('.nickname').innerHTML;
+                if (replying_to_nickname.match(m[1])) {
+                    var prior_comment = comments[ix];
+                    comments_thread.splice(comments_thread.indexOf(comments[i]), 0, prior_comment);
+                    // insert a button to show this other comment
+                    var span = document.createElement('span');
+                    span.setAttribute('class', 'smallest');
+                    var a = document.createElement('a');
+                    a.setAttribute('href', '#' + prior_comment.id);
+                    a.innerHTML = 'in reply to ' + replying_to_nickname;
+                    span.appendChild(a);
+                    // and when clicked, display that comment inline
+                    a.addEventListener('click', (function (replied_to_comment) {
+                        return function (event) {
+                            event.preventDefault();
+                            var div = document.createElement('div');
+                            div.setAttribute('class', 'comment-shitstorm');
+                            var z = replied_to_comment.cloneNode(true);
+                            div.appendChild(z);
+                            this.parentNode.parentNode.parentNode.insertBefore(div, this.parentNode.parentNode.parentNode.querySelector('.content'));
+                        }
+                    }(prior_comment))); // capture reference to prior_comment
+                    // make a text node for prettiness
+                    var txt = document.createTextNode(' ');
+                    span.appendChild(txt);
+                    comments[i].getElementsByTagName('footer')[0].appendChild(span);
+                    break; // Found it, stop loop!
+                }
+            }
+        }
+        // and offer a link to reply to this comment, too
+//        var reply_link = document.createElement('a');
+//        reply_link.setAttribute('href', '#');
+//        reply_link.innerHTML = 'reply to ' + comments[i].querySelector('.nickname').innerHTML + '\'s comment';
+//        reply_link.addEventListener('click', function (e) {
+//            e.preventDefault();
+//            // TODO:
+//            uw.document.getElementById('generic_comment_body_fake').click(); // simulate user click?
+//            uw.document.getElementById('generic_comment_body').focus();
+//        });
+//        comments[i].getElementsByTagName('footer')[0].appendChild(reply_link);
+    }
+
+    // now that we have all the replied-to-comments,
+    uniq_comments_thread = jQuery.unique(comments_thread);
+
+    // add a "previous reply" and "next reply" button at the end of them to jump from one to the next
+    for (var i = 0; i < uniq_comments_thread.length; i++) {
+        var ftr = document.createElement('footer');
+        ftr.setAttribute('class', 'comment-shitstorm');
+        var html_string = '';
+        // Is there a previous item?
+        if (-1 !== (i - 1)) {
+            html_string += '<a style="float: left;" href="#' + uniq_comments_thread[i - 1].id + '">&larr; Previous in thread on page</a> ';
+        }
+        // Is there a next item?
+        if ((i + 1) < uniq_comments_thread.length) {
+            html_string += '<a style="float: right;" href="#' + uniq_comments_thread[i + 1].id + '">Next in thread on page &rarr;</a>';
+        }
+        ftr.innerHTML = html_string;
+        uniq_comments_thread[i].appendChild(ftr);
+    }
+};
