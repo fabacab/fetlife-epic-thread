@@ -61,8 +61,9 @@ FL_SHITSTORM.main = function () {
             // by iterating backwards from the current position
             for (var ix = i; ix >= 0; ix--) {
                 var replying_to_nickname = (comments[ix].querySelector('.nickname')
-                                         || comments[ix].querySelector('.q a')).innerHTML // selectors for group/improvement page respectively
-                if (replying_to_nickname.match(m[1])) {
+                                         || comments[ix].querySelector('.q a')).innerHTML; // selectors for group/improvement page respectively
+                var pat = new RegExp(m[1], 'i'); // do case-insensitive pattern matching
+                if (pat.exec(replying_to_nickname)) {
                     var prior_comment = comments[ix];
                     comments_thread.splice(comments_thread.indexOf(comments[i]), 0, prior_comment);
                     // insert a button to show this other comment
