@@ -8,7 +8,7 @@
 // @name           FetLife Epic Thread
 // @version        0.1
 // @namespace      http://maybemaimed.com/playground/fetlife-epic-thread/
-// @updateURL      https://userscripts.org/scripts/source/????.user.js
+// @updateURL      https://userscripts.org/scripts/source/149430.user.js
 // @description    Easily view comments in-reply-to other comments on FetLife discussion threads, quickly jump from one comment in a thread on the same page to another.
 // @include        https://fetlife.com/*
 // @grant          GM_addStyle
