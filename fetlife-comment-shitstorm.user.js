@@ -53,13 +53,15 @@ FL_SHITSTORM.main = function () {
     var comments_thread = [];
     for (var i = 0; i < comments.length; i++) {
         // that contains an "@-reply",
-        var m = comments[i].querySelector('.content').innerHTML.match(/@\s*(\w+)/i);
+        // (this works on both "groups" and "improvements" even though their structure is pretty different)
+        var m = comments[i].querySelector('.content').innerHTML.match(/<p>\s*@(\w+)/i);
         if (m !== null && m[1]) {
             comments_thread.push(comments[i]);
             // find the most recent comment by the user who was @-reply'ed to
             // by iterating backwards from the current position
             for (var ix = i; ix >= 0; ix--) {
-                var replying_to_nickname = comments[ix].querySelector('.nickname').innerHTML;
+                var replying_to_nickname = (comments[ix].querySelector('.nickname')
+                                         || comments[ix].querySelector('.q a')).innerHTML // selectors for group/improvement page respectively
                 if (replying_to_nickname.match(m[1])) {
                     var prior_comment = comments[ix];
                     comments_thread.splice(comments_thread.indexOf(comments[i]), 0, prior_comment);
@@ -78,13 +80,25 @@ FL_SHITSTORM.main = function () {
                             div.setAttribute('class', 'comment-shitstorm');
                             var z = replied_to_comment.cloneNode(true);
                             div.appendChild(z);
-                            this.parentNode.parentNode.parentNode.insertBefore(div, this.parentNode.parentNode.parentNode.querySelector('.content'));
+                            var upper = this.parentNode.parentNode.parentNode;
+                            var after;
+                            if (upper.className.indexOf('content') != -1) {
+                                // improvement page
+                                after = upper.getElementsByTagName('p')[0];
+                                div.style.marginLeft = '0px';
+                            } else {
+                                // group page
+                                after = upper.querySelector('.content');
+                            }
+                            upper.insertBefore(div, after);
                         }
                     }(prior_comment))); // capture reference to prior_comment
                     // make a text node for prettiness
                     var txt = document.createTextNode(' ');
                     span.appendChild(txt);
-                    comments[i].getElementsByTagName('footer')[0].appendChild(span);
+                    var appendee = (comments[i].getElementsByTagName('footer')[0] // group
+                                 || comments[i].querySelector('.q'));             // improvement
+                    appendee.appendChild(span);
                     break; // Found it, stop loop!
                 }
             }
