@@ -1,15 +1,15 @@
 /**
  *
- * This is a Greasemonkey script and must be run using Greasemonkey 0.8 or newer, or Google Chrome.
+ * This is a Greasemonkey script and must be run using Greasemonkey 1.0 or newer.
  *
  * @author maymay <bitetheappleback@gmail.com>
  */
 // ==UserScript==
-// @name           FetLife Comment Shitstorm
+// @name           FetLife Epic Thread
 // @version        0.1
-// @namespace      http://maybemaimed.com/playground/fetlife-comment-shitstorm/
+// @namespace      http://maybemaimed.com/playground/fetlife-epic-thread/
 // @updateURL      https://userscripts.org/scripts/source/????.user.js
-// @description    Easily view comments in-reply-to other comments on a heated FetLife discussion thread.
+// @description    Easily view comments in-reply-to other comments on FetLife discussion threads, quickly jump from one comment in a thread on the same page to another.
 // @include        https://fetlife.com/*
 // @grant          GM_addStyle
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js
