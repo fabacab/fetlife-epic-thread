@@ -38,7 +38,8 @@ footer.comment-shitstorm {\
     width: 598px;\
     float: left;\
 }\
-article.comment:target { border: 1px solid red; }\
+.comment-shitstorm footer.comment-shitstorm { width: 100%; }\
+.comment:target { border: 1px solid red; }\
 ');
 FL_SHITSTORM.init = function () {
     FL_SHITSTORM.main();
