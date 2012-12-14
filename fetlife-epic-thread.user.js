@@ -1,6 +1,6 @@
 /**
  *
- * This is a Greasemonkey script and must be run using Greasemonkey 1.0 or newer.
+ * This is a Greasemonkey script and must be run using a Greasemonkey-compatible browser.
  *
  * @author maymay <bitetheappleback@gmail.com>
  */
@@ -12,6 +12,7 @@
 // @description    Easily view comments in-reply-to other comments on FetLife discussion threads, quickly jump from one comment in a thread on the same page to another.
 // @include        https://fetlife.com/*
 // @grant          GM_addStyle
+// @grant          GM_log
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js
 // ==/UserScript==
 

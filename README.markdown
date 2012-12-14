@@ -4,9 +4,15 @@ The FetLife Epic Thread user script makes reading long, passionate discussions o
 
 ## System requirements
 
-To use the FetLife Epic Thread user script, you must be running [Mozilla Firefox](http://getfirefox.com/) (version 12.0 or higher), with the [Greasemonkey extension](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed (at version 1.0 or higher).
+The following software must be installed on your system before installing the FetLife Epic Thread user script.
 
-Sorry, FetLife Epic Thread is currently [incompatible with other Web browsers](https://github.com/meitar/fetlife-epic-thread/issues/1). (Please help me fix that!)
+### Mozilla Firefox
+
+If you use the [Mozilla Firefox](http://getfirefox.com/) web browser (version 12.0 or higher), ensure you have the [Greasemonkey extension](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) installed (at version 1.0 or higher).
+
+### Google Chrome
+
+If you use the [Google Chrome](https://chrome.google.com/) web browser (version 23 or higher), ensure you have the [Tampermonkey extension](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) installed.
 
 ## Installing
 
