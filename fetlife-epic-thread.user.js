@@ -49,11 +49,24 @@ window.addEventListener('DOMContentLoaded', FL_SHITSTORM.init);
 
 // This is the main() function, executed on page load.
 FL_SHITSTORM.main = function () {
+    // Add a "Disenvowel!" button.
+    var btn = document.createElement('button');
+    btn.setAttribute('id', 'fl-shitstorm-disenvowel');
+    btn.innerHTML = 'Disenvowel!';
+    btn.addEventListener('click', function () {
+        var comments = document.querySelectorAll('#comments .comment .content');
+        for (var i = 0; i < comments.length; i++) {
+            comments[i].textContent = comments[i].textContent.replace(/[aeiou]/ig, '');
+        }
+    });
+    document.querySelector('form[action="/search"]').parentNode.appendChild(btn);
+
     // Iterate through list of comments.
     var comments = document.querySelectorAll('#comments .comment');
     // For each comment
     var comments_thread = [];
     for (var i = 0; i < comments.length; i++) {
+        // TODO: Add a way to "Disenvowel" individual comments before they're likely to trigger.
         // that contains an "@-reply",
         var m = comments[i].querySelector('.content').innerHTML.match(/@(\w+)/i);
         if (m !== null && m[1]) {
