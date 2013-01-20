@@ -1,6 +1,9 @@
 # FetLife Epic Thread
 
-The FetLife Epic Thread user script makes reading long, passionate discussions on FetLife.com easier by adding comment threading for @-replies, a "previous/next" link for related comments, and visual highlights. Instead of needing to scroll past a bunch of unrelated comments, simply click the "Next in thread on page" link to go to the next comment in the thread. Rather than having to scroll up or copy-and-paste to see what a comment is replying to, click the "in reply to" link to see the original comment right under your cursor.
+The FetLife Epic Thread user script makes reading long, passionate discussions on FetLife.com easier and less painful. To accomplish this, FetLife Epic Thread:
+
+* adds comment threading for @-replies, a "previous/next" link for related comments, and visual highlights. Instead of needing to scroll past a bunch of unrelated comments, simply click the "Next in thread on page" link to go to the next comment in the thread. Rather than having to scroll up or copy-and-paste to see what a comment is replying to, click the "in reply to" link to see the original comment right under your cursor.
+* [disemvowels](https://en.wikipedia.org/wiki/Disemvoweling) comments when they load (until you request otherwise). Disemvoweling reduces the likelihood that comments will be able to trigger you by making them illegible except through significant effort.
 
 ## System requirements
 
@@ -16,7 +19,7 @@ If you use the [Google Chrome](https://chrome.google.com/) web browser (version 
 
 ## Installing
 
-To install FetLife Epic Thread, go to [http://maybemaimed.com/playground/fetlife-epic-thread/](http://maybemaimed.com/playground/fetlife-epic-thread/) and click the "[Download and install](https://userscripts.org/scripts/source/149430.user.js)" near the middle of the page:
+To install FetLife Epic Thread, go to [http://maybemaimed.com/playground/fetlife-epic-thread/](http://maybemaimed.com/playground/fetlife-epic-thread/) and click "[Download and install](https://userscripts.org/scripts/source/149430.user.js)" near the middle of the page:
 
 > [Download and install FetLife Epic Thread](https://userscripts.org/scripts/source/149430.user.js)
 
@@ -26,7 +29,12 @@ If [maybemaimed.com is censored](http://maybemaimed.com/where-im-censored/) wher
 
 ## Using
 
-To use FetLife Epic Thread, [log in to your FetLife.com account](https://fetlife.com/login) and go to any discussion page on the site (such as group discussion pages or user writings). To write a comment in reply to a specific other user, start your comment with `@OtherUsersNickname` where `OtherUsersNickname` is the other user's nickname.
+To use FetLife Epic Thread, [log in to your FetLife.com account](https://fetlife.com/login) and go to any discussion page on the site (such as group discussion pages or user writings). By default, all comment threads will be disemvoweled to protect you from potential triggers, such as the blatant racism, transphobia, misogyny, domism, and any other general assholery often found in FetLife comment threads.
+
+* Before disemvowelment: ![Screenshot of insulting comments on FetLife.](http://i.imgur.com/CS02eGY.png)
+* After disemvowelment: ![Screenshot of insulting comments disemvoweled.](http://i.imgur.com/f3QrxER.png)
+
+To write a comment in reply to a specific other user, start your comment with `@OtherUsersNickname` where `OtherUsersNickname` is the other user's nickname.
 
 ![Screenshot showing example of how to reply to another user.](http://i.imgur.com/KJKmP.png)
 
@@ -43,3 +51,10 @@ A "Previous in thread on page" link will also be added to your comment, allowing
 In this way, readers will be able to view comments in threaded format more easily, and you will be able to more quickly find and read relevant comments in a long page.
 
 ![Screenshot showing threaded debate with multiple in-reply-to's revealed.](http://i.imgur.com/mmamP.png)
+
+## Change log
+
+* Version 0.1.1
+    * Add disemvoweling support.
+* Version 0.1
+    * Initial release.

@@ -6,19 +6,22 @@
  */
 // ==UserScript==
 // @name           FetLife Epic Thread
-// @version        0.1
+// @version        0.1.1
 // @namespace      http://maybemaimed.com/playground/fetlife-epic-thread/
 // @updateURL      https://userscripts.org/scripts/source/149430.user.js
 // @description    Easily view comments in-reply-to other comments on FetLife discussion threads, quickly jump from one comment in a thread on the same page to another.
 // @include        https://fetlife.com/*
 // @grant          GM_addStyle
 // @grant          GM_log
-// @require        https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js
+// @grant          GM_getValue
+// @grant          GM_setValue
+// @require        https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // ==/UserScript==
 
 FL_SHITSTORM = {};
 FL_SHITSTORM.CONFIG = {
     'debug': false, // switch to true to debug.
+    'load_disemvoweled': GM_getValue('load_disemvoweled', true) // Whether to load comments disemvoweled or not.
 };
 
 // Utility debugging function.
@@ -47,26 +50,34 @@ FL_SHITSTORM.init = function () {
 };
 window.addEventListener('DOMContentLoaded', FL_SHITSTORM.init);
 
+FL_SHITSTORM.disemvowel = function (str) {
+    return str.replace(/[aeiou]/ig, '');
+};
+FL_SHITSTORM.disemvowel_deep = function (el) {
+    // If this is a TEXT_NODE, this can't have children
+    if (3 === el.nodeType) {
+        el.textContent = FL_SHITSTORM.disemvowel(el.textContent);
+    } else {
+        for (var i = 0; i < el.childNodes.length; i++) {
+            FL_SHITSTORM.disemvowel_deep(el.childNodes[i]); // recurse
+        }
+    }
+};
+
+FL_SHITSTORM.disemvowelComments = function (comments) {
+    for (var i = 0; i < comments.length; i++) {
+        FL_SHITSTORM.disemvowel_deep(comments[i]);
+    }
+};
+
 // This is the main() function, executed on page load.
 FL_SHITSTORM.main = function () {
-    // Add a "Disenvowel!" button.
-    var btn = document.createElement('button');
-    btn.setAttribute('id', 'fl-shitstorm-disenvowel');
-    btn.innerHTML = 'Disenvowel!';
-    btn.addEventListener('click', function () {
-        var comments = document.querySelectorAll('#comments .comment .content');
-        for (var i = 0; i < comments.length; i++) {
-            comments[i].textContent = comments[i].textContent.replace(/[aeiou]/ig, '');
-        }
-    });
-    document.querySelector('form[action="/search"]').parentNode.appendChild(btn);
-
     // Iterate through list of comments.
     var comments = document.querySelectorAll('#comments .comment');
     // For each comment
     var comments_thread = [];
     for (var i = 0; i < comments.length; i++) {
-        // TODO: Add a way to "Disenvowel" individual comments before they're likely to trigger.
+        // TODO: Add a way to "Disemvowel" individual comments before they're likely to trigger.
         // that contains an "@-reply",
         var m = comments[i].querySelector('.content').innerHTML.match(/@(\w+)/i);
         if (m !== null && m[1]) {
@@ -149,5 +160,36 @@ FL_SHITSTORM.main = function () {
         }
         ftr.innerHTML = html_string;
         uniq_comments_thread[i].appendChild(ftr);
+    }
+
+    // Offer buttons for changing default settings.
+    var hdr = document.querySelector('#comments header');
+    if (FL_SHITSTORM.CONFIG.load_disemvoweled) {
+        // Disemvowl page by default.
+        var comments = document.querySelectorAll('#comments .comment .content');
+        FL_SHITSTORM.disemvowelComments(comments);
+        var btn = document.createElement('button');
+        btn.innerHTML = 'Stop loading comments disemvoweled.';
+        btn.addEventListener('click', function (e) {
+            GM_setValue('load_disemvoweled', false);
+            hdr.innerHTML = hdr.innerHTML + 'Okay! Comments will no longer be disemvowled when they load.';
+        });
+        hdr.appendChild(btn);
+    } else {
+        // Add a "Disemvowel!" button.
+        var btn = document.createElement('button');
+        btn.innerHTML = 'Disemvowel!';
+        btn.addEventListener('click', function () {
+            var comments = document.querySelectorAll('#comments .comment .content');
+            FL_SHITSTORM.disemvowelComments(comments);
+        });
+        hdr.appendChild(btn);
+        var btn2 = document.createElement('button');
+        btn2.innerHTML = 'Load comments disemvoweled.';
+        btn2.addEventListener('click', function () {
+            GM_setValue('load_disemvoweled', true);
+            hdr.innerHTML = hdr.innerHTML + 'Okay! Comments will now be disemvowled when they load.';
+        });
+        hdr.appendChild(btn2);
     }
 };
